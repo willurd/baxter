@@ -1,3 +1,81 @@
+/**
+ * TODO: Copyright goes here.
+ */
+(function (global, undefined) {
+	"use strict";
+	
+	var baxter;
+
+function toArray (object, start) {
+	return Array.prototype.slice.call(object, start || 0);
+}
+
+function extend (target /*, ...objects */) {
+	var objects = toArray(arguments, 1);
+	
+	for (var i = 0, len = objects.length; i < len; i++) {
+		var object = objects[i];
+		
+		for (var key in object) {
+			target[key] = object[key];
+		}
+	}
+	
+	return target;
+}
+
+function bind (context, fn) {
+	return function () {
+		return fn.apply(context, arguments);
+	};
+}
+
+function AST () {
+	
+}
+
+// Class properties.
+extend(AST, {
+	
+});
+
+// Instance properties.
+extend(AST.prototype, {
+	
+});
+
+function Parser () {
+	
+}
+
+// Class properties.
+extend(Parser, {
+	
+});
+
+// Instance properties.
+extend(Parser.prototype, {
+	
+});
+
+function Template (id, content) {
+	this.id = id;
+	this.content = content;
+	this.ast = Parser.parse(content);
+}
+
+// Class properties.
+extend(Template, {
+	
+});
+
+// Instance properties.
+extend(Template.prototype, {
+	evaluate: function (context) {
+		return this.ast.evaluate(context);
+	}
+});
+
 function Baxter () {
 	this.cache = {}; // Templates by name.
 }
@@ -86,3 +164,7 @@ extend(Baxter.prototype, {
 		return this.cache[template];
 	}
 });
+
+	baxter = new Baxter();
+	global.baxter = bind(baxter, baxter.template);
+})(this);
