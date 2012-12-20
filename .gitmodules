@@ -1,0 +1,3 @@
+[submodule "lib/unittest"]
+	path = lib/unittest
+	url = https://github.com/willurd/JSTest.git
