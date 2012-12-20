@@ -1,0 +1,9 @@
+{% extend "base-template" %}
+
+{% section main %}
+	<ul class="{{ class }}">
+	{% for item in items %}
+		<li><a href="{{ item.url }}#{{ item.title | slugify }}">{{ item.fullName() }}</a></li>
+	{% end %}
+	</ul>
+{% end %}
