@@ -30,8 +30,88 @@ function bind (context, fn) {
 	};
 }
 
-function AST () {
+function EOFError (message) {
+	this.message = message;
+	this.name = "EOFError";
+}
+
+EOFError.prototype = extend(new Error(), {
 	
+});
+
+function Environment (context) {
+	this.context = context;
+}
+
+// Class properties.
+extend(Environment, {
+	
+});
+
+// Instance properties.
+extend(Environment.prototype, {
+	
+});
+
+function Buffer (string) {
+	if (typeof string !== "string") {
+		throw new TypeError("Buffer expects a string");
+	}
+	
+	this.string = string;
+	this.position = 0;
+}
+
+// Class properties.
+extend(Buffer, {
+	
+});
+
+// Instance properties.
+extend(Buffer.prototype, {
+	peek: function () {
+		return this.string[this.position];
+	},
+	
+	next: function () {
+		return this.string[this.position++];
+	}
+});
+
+function ASTNode () {
+	
+}
+
+// Class properties.
+extend(ASTNode, {
+	
+});
+
+// Instance properties.
+extend(ASTNode.prototype, {
+	evaluate: function (env) {
+		return undefined;
+	}
+});
+
+function ASTString (string) {
+	return this.string;
+}
+
+// Class properties.
+extend(ASTString, {
+	
+});
+
+// Instance properties.
+extend(ASTString.prototype, {
+	evaluate: function (env) {
+		return this.string;
+	}
+});
+
+function AST () {
+	this.tree = [];
 }
 
 // Class properties.
@@ -41,7 +121,15 @@ extend(AST, {
 
 // Instance properties.
 extend(AST.prototype, {
+	evaluate: function (env) {
+		return this.tree.map(function (node) {
+			return node.evaluate(env);
+		}).join("");
+	},
 	
+	add: function (node) {
+		this.tree.push(node);
+	}
 });
 
 function Parser () {
@@ -50,12 +138,43 @@ function Parser () {
 
 // Class properties.
 extend(Parser, {
+	instance: new Parser(),
 	
+	parse: function (string) {
+		return this.instance.parse(string);
+	}
 });
 
 // Instance properties.
 extend(Parser.prototype, {
+	parse: function (string) {
+		var buffer = new Buffer(string);
+		var ast = new AST();
+		
+		this.parseString(buffer, ast);
+		
+		return ast;
+	},
 	
+	parseString: function (buffer, ast) {
+		var chars = [];
+		
+		try {
+			while (buffer.peek() != "{") {
+				chars.push(buffer.next());
+			}
+		} catch (e) {
+			if (!(e instanceof EOFError)) {
+				throw e;
+			}
+		}
+		
+		ast.add(new ASTString(chars.join("")));
+	},
+	
+	parseVariable: function (buffer, ast) {
+		
+	}
 });
 
 function Template (id, content) {

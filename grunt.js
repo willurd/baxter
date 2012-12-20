@@ -5,20 +5,28 @@ module.exports = function (grunt) {
 			grunt: "grunt.js",
 			src: [
 				"src/utils.js",
-				"src/AST.js",
+				"src/error/EOFError.js",
+				"src/Environment.js",
+				"src/Buffer.js",
+				"src/ast/ASTNode.js",
+				"src/ast/ASTString.js",
+				"src/ast/AST.js",
 				"src/Parser.js",
 				"src/Template.js",
 				"src/Baxter.js"
 			],
-			test: "test/**/*.js",
+			tests: "test/**/*.js",
 			build: "build/baxter.js",
 			buildmin: "build/baxter.min.js"
 		},
 		lint: {
+			tests: [
+				"<config:files.tests>"
+			],
 			before: [
 				"<config:files.grunt>",
 				"<config:files.src>",
-				"<config:files.test>"
+				"<config:files.tests>"
 			],
 			after: [
 				"<config:files.build>"
@@ -46,6 +54,12 @@ module.exports = function (grunt) {
 					"<config:files.grunt>"
 				],
 				tasks: ["default"]
+			},
+			tests: {
+				files: [
+					"<config:files.tests>"
+				],
+				tasks: ["lint:tests"]
 			}
 		}
 	});
