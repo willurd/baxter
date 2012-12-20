@@ -17,13 +17,31 @@ extend(Parser.prototype, {
 		var buffer = new Buffer(string);
 		var ast = new AST();
 		
-		this.parseString(buffer, ast);
+		while (!buffer.eof()) {
+			this.parseNext(buffer, ast);
+		}
 		
 		return ast;
 	},
 	
-	parseEscapedCharacter: function (buffer, ast) {
+	/**
+	 * Parses the next node, whatever it is.
+	 */
+	parseNext: function (buffer, ast) {
+		var chr = buffer.peek();
 		
+		if (chr == "{") {
+			var next = buffer.peek(2);
+			if (next == "{") {
+				this.parseVariable(buffer, ast);
+			} else if (next == "%") {
+				this.parseDirective(buffer, ast);
+			} else {
+				throw new ParseError("Unknown directive syntax: " + (chr + next));
+			}
+		} else {
+			this.parseString(buffer, ast);
+		}
 	},
 	
 	/**
@@ -31,10 +49,17 @@ extend(Parser.prototype, {
 	 */
 	parseString: function (buffer, ast) {
 		var chars = [];
+		var chr;
 		
 		try {
 			while (buffer.peek() != "{") {
-				chars.push(buffer.next());
+				chr = buffer.next();
+				
+				if (chr == "\\") {
+					chars.push(buffer.next());
+				} else {
+					chars.push(chr);
+				}
 			}
 		} catch (e) {
 			if (!(e instanceof EOFError)) {
@@ -46,17 +71,36 @@ extend(Parser.prototype, {
 	},
 	
 	/**
-	 * A directive is any sequence that starts with '{'.
+	 * A directive is a sequence that starts with '{%' and ends with '%}'.
 	 */
 	parseDirective: function (buffer, ast) {
+		var chr;
 		
+		buffer.next(2); // {%
+		
+		while (buffer.peek() != "%") {
+			chr = buffer.next();
+		}
+		
+		buffer.next(2); // %}
 	},
 	
 	/**
-	 * A variable is a directive for placing a value from the environment into
-	 * the resulting string.
+	 * A variable is a sequence that starts with '{{' and ends with '}}'.
 	 */
-	parseVariableDirective: function (buffer, ast) {
+	parseVariable: function (buffer, ast) {
+		var chr;
+		var name = [];
 		
+		buffer.next(2); // {{
+		
+		while (buffer.peek() != "}") {
+			chr = buffer.next();
+			name.push(chr);
+		}
+		
+		buffer.next(2); // }}
+		
+		ast.add(new AST.Variable(trim(name.join(""))));
 	}
 });

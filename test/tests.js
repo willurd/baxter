@@ -3,6 +3,12 @@ unittest.testCase("Baxter.js Smoke Test", {
 		this.assertFunction(baxter);
 	},
 	
+	testBasicString: function () {
+		var string = "This is a test";
+		
+		this.assertEqual(baxter(string), string);
+	},
+	
 	testUnnamedTemplate: function () {
 		var template = "My name is {{ name }}";
 		var context = { name: "Bob" };

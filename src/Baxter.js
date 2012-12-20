@@ -33,16 +33,18 @@ extend(Baxter.prototype, {
 	 *   @param b (context)    {object} A non-string object or array.
 	 */
 	template: function (a, b) {
-		var templateId, template, context;
+		var templateId, template, context, bType;
 		
 		if (typeof a !== "string") {
 			throw new TypeError("Unknown template or template id: " + a);
 		}
 		
-		if (typeof b === "string") {
+		bType = typeof b;
+		
+		if (bType === "string") {
 			return this.register(a, b);
-		} else if (typeof b === "object") {
-			return this.evaluate(a, b);
+		} else if (bType === "object" || bType === "undefined") {
+			return this.evaluate(a, b || {});
 		}
 		
 		throw new TypeError("Unknown template or context: " + b);
@@ -64,12 +66,12 @@ extend(Baxter.prototype, {
 			text = [];
 			
 			for (var i = 0, len = context.length; i < len; i++) {
-				text.push(tpl.evaluate(context[i]));
+				text.push(tpl.evaluate(new Environment(context[i])));
 			}
 			
 			return text.join("\n");
 		} else {
-			return tpl.evaluate(context);
+			return tpl.evaluate(new Environment(context));
 		}
 	},
 	

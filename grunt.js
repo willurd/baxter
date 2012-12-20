@@ -6,11 +6,13 @@ module.exports = function (grunt) {
 			src: [
 				"src/utils.js",
 				"src/error/EOFError.js",
+				"src/error/ParseError.js",
 				"src/Environment.js",
 				"src/Buffer.js",
 				"src/ast/AST.js",
-				"src/ast/ASTNode.js",
-				"src/ast/ASTString.js",
+				"src/ast/Node.js",
+				"src/ast/String.js",
+				"src/ast/Variable.js",
 				"src/Parser.js",
 				"src/Template.js",
 				"src/Baxter.js"

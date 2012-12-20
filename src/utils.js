@@ -21,3 +21,7 @@ function bind (context, fn) {
 		return fn.apply(context, arguments);
 	};
 }
+
+function trim (string) {
+	return string.replace(/^\s+|\s+$/g, "");
+}
