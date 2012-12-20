@@ -4,7 +4,20 @@
 		<meta charset="utf-8" />
 		<title>Baxter.js Tests</title>
 		<link rel="stylesheet" type="text/css" href="../lib/unittest/style.css" media="screen" />
+		
+		<!-- Include the pre-concatenated files for testing, because they are hidden after concatenation. -->
+		<script src="../src/utils.js"></script>
+		<script src="../src/Environment.js"></script>
+		<script src="../src/Buffer.js"></script>
+		<script src="../src/ast/AST.js"></script>
+		<script src="../src/ast/ASTNode.js"></script>
+		<script src="../src/ast/ASTString.js"></script>
+		<script src="../src/Parser.js"></script>
+		<script src="../src/Template.js"></script>
+		
+		<!-- Include the concatenated file to test that interface. -->
 		<script src="../build/baxter.js"></script>
+		
 		<script src="../lib/unittest/unittest.js"></script>
 		<script src="tests.js"></script>
 		<script>

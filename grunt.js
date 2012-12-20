@@ -8,9 +8,9 @@ module.exports = function (grunt) {
 				"src/error/EOFError.js",
 				"src/Environment.js",
 				"src/Buffer.js",
+				"src/ast/AST.js",
 				"src/ast/ASTNode.js",
 				"src/ast/ASTString.js",
-				"src/ast/AST.js",
 				"src/Parser.js",
 				"src/Template.js",
 				"src/Baxter.js"
