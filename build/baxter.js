@@ -78,38 +78,6 @@ extend(Buffer.prototype, {
 	}
 });
 
-function ASTNode () {
-	
-}
-
-// Class properties.
-extend(ASTNode, {
-	
-});
-
-// Instance properties.
-extend(ASTNode.prototype, {
-	evaluate: function (env) {
-		return undefined;
-	}
-});
-
-function ASTString (string) {
-	return this.string;
-}
-
-// Class properties.
-extend(ASTString, {
-	
-});
-
-// Instance properties.
-extend(ASTString.prototype, {
-	evaluate: function (env) {
-		return this.string;
-	}
-});
-
 function AST () {
 	this.tree = [];
 }
@@ -129,6 +97,38 @@ extend(AST.prototype, {
 	
 	add: function (node) {
 		this.tree.push(node);
+	}
+});
+
+AST.Node = function () {
+	
+};
+
+// Class properties.
+extend(AST.Node, {
+	
+});
+
+// Instance properties.
+extend(AST.Node.prototype, {
+	evaluate: function (env) {
+		return undefined;
+	}
+});
+
+AST.String = function (string) {
+	this.string = string;
+};
+
+// Class properties.
+extend(AST.String, {
+	
+});
+
+// Instance properties.
+AST.String.prototype = extend(new AST.Node(), {
+	evaluate: function (env) {
+		return this.string;
 	}
 });
 
@@ -156,6 +156,13 @@ extend(Parser.prototype, {
 		return ast;
 	},
 	
+	parseEscapedCharacter: function (buffer, ast) {
+		
+	},
+	
+	/**
+	 * Strings are anything that's not a directive.
+	 */
 	parseString: function (buffer, ast) {
 		var chars = [];
 		
@@ -169,10 +176,21 @@ extend(Parser.prototype, {
 			}
 		}
 		
-		ast.add(new ASTString(chars.join("")));
+		ast.add(new AST.String(chars.join("")));
 	},
 	
-	parseVariable: function (buffer, ast) {
+	/**
+	 * A directive is any sequence that starts with '{'.
+	 */
+	parseDirective: function (buffer, ast) {
+		
+	},
+	
+	/**
+	 * A variable is a directive for placing a value from the environment into
+	 * the resulting string.
+	 */
+	parseVariableDirective: function (buffer, ast) {
 		
 	}
 });
@@ -237,12 +255,12 @@ extend(Baxter.prototype, {
 		}
 		
 		if (typeof b === "string") {
-			this.register(a, b);
+			return this.register(a, b);
 		} else if (typeof b === "object") {
-			this.evaluate(a, b);
-		} else {
-			throw new TypeError("Unknown template or context: " + b);
+			return this.evaluate(a, b);
 		}
+		
+		throw new TypeError("Unknown template or context: " + b);
 	},
 	
 	register: function (id, template) {

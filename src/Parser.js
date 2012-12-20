@@ -22,6 +22,13 @@ extend(Parser.prototype, {
 		return ast;
 	},
 	
+	parseEscapedCharacter: function (buffer, ast) {
+		
+	},
+	
+	/**
+	 * Strings are anything that's not a directive.
+	 */
 	parseString: function (buffer, ast) {
 		var chars = [];
 		
@@ -35,10 +42,21 @@ extend(Parser.prototype, {
 			}
 		}
 		
-		ast.add(new ASTString(chars.join("")));
+		ast.add(new AST.String(chars.join("")));
 	},
 	
-	parseVariable: function (buffer, ast) {
+	/**
+	 * A directive is any sequence that starts with '{'.
+	 */
+	parseDirective: function (buffer, ast) {
+		
+	},
+	
+	/**
+	 * A variable is a directive for placing a value from the environment into
+	 * the resulting string.
+	 */
+	parseVariableDirective: function (buffer, ast) {
 		
 	}
 });

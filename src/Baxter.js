@@ -40,12 +40,12 @@ extend(Baxter.prototype, {
 		}
 		
 		if (typeof b === "string") {
-			this.register(a, b);
+			return this.register(a, b);
 		} else if (typeof b === "object") {
-			this.evaluate(a, b);
-		} else {
-			throw new TypeError("Unknown template or context: " + b);
+			return this.evaluate(a, b);
 		}
+		
+		throw new TypeError("Unknown template or context: " + b);
 	},
 	
 	register: function (id, template) {
