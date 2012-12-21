@@ -60,6 +60,8 @@ module.exports = function (grunt) {
 			src: {
 				files: [
 					"<config:files.src>",
+					"src/wrapper/_header.js",
+					"src/wrapper/_footer.js",
 					"<config:files.grunt>"
 				],
 				tasks: ["default"]

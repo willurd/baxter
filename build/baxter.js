@@ -78,6 +78,9 @@ extend(Environment.prototype, {
 			}
 		} catch (e) {
 			// Error getting value.
+			if (global.baxter.debug) {
+				throw e;
+			}
 		}
 		
 		return value;
@@ -419,5 +422,7 @@ extend(Baxter.prototype, {
 });
 
 	baxter = new Baxter();
-	global.baxter = bind(baxter, baxter.template);
+	baxter.template = bind(baxter, baxter.template);
+	baxter.template.debug = false;
+	global.baxter = baxter.template;
 })(this);

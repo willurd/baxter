@@ -25,6 +25,9 @@ extend(Environment.prototype, {
 			}
 		} catch (e) {
 			// Error getting value.
+			if (global.baxter.debug) {
+				throw e;
+			}
 		}
 		
 		return value;

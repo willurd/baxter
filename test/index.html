@@ -31,6 +31,8 @@
 		<script src="tests/error.js"></script>
 		<script>
 		window.onload = function () {
+			baxter.debug = false;
+			
 			var runner = new unittest.TestRunner();
 			// runner.handlers.add(new unittest.handler.ConsoleHandler(false));
 			runner.handlers.add(new unittest.handler.HTMLHandler(true, "test-results", true));
