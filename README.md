@@ -25,7 +25,7 @@ baxter("whos-template", {
 ### Use an html tag template
 
 ```html
-<script id="my-template" type="text/baxter">
+<script id="list-template" type="text/baxter">
 <ul>
 	<li>{{ one }}</li>
 	<li>{{ two }}</li>
@@ -47,6 +47,8 @@ baxter("list-template", {
 ### Use an unnamed template with an array
 
 Baxter.js know's this is an unnamed template because no template named `<li>{{ value }}</li>` has been registered yet and no html element exists with that id. However, after this has run Baxter.js will cache the parsed template, using the cached object each subsequent time you call Baxter.js with the same template string.
+
+Baxter also smartly handles array contexts by running each item in the array over the template individually, then joining the results together.
 
 ```javascript
 // template content, context
