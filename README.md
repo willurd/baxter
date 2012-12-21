@@ -4,9 +4,10 @@ Baxter.js (pronounced 'Baxter') is a JavaScript templating engine. Baxter.js doe
 
 ## Usage
 
-### Compile a template that's inside an html tag (typically a script)
+### Manually register a template
 
 ```javascript
+// template name, template content
 baxter("whos-template", "this is {{ who }}'s template");
 >> undefined
 ```
@@ -14,6 +15,7 @@ baxter("whos-template", "this is {{ who }}'s template");
 ### Use a pre-registered template
 
 ```javascript
+// template name, context
 baxter("whos-template", {
 	who: "joe"
 });
@@ -33,6 +35,7 @@ baxter("whos-template", {
 ```
 
 ```javascript
+// html tag id, context
 baxter("list-template", {
 	one: 1,
 	two: 2,
@@ -46,6 +49,7 @@ baxter("list-template", {
 Baxter.js know's this is an unnamed template because no template named `<li>{{ value }}</li>` has been registered yet and no html element exists with that id. However, after this has run Baxter.js will cache the parsed template, using the cached object each subsequent time you call Baxter.js with the same template string.
 
 ```javascript
+// template content, context
 baxter("<li>{{ value }}</li>", [
 	{ value: "one" },
 	{ value: "two" },
