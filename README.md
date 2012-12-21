@@ -4,23 +4,46 @@ Baxter.js (pronounced 'Baxter') is a JavaScript templating engine. Baxter.js doe
 
 ## Usage
 
-Compile a template that's inside an html tag (typically a script):
+### Compile a template that's inside an html tag (typically a script)
 
 ```javascript
-baxter("template-id", "this is {{ who }}'s template");
+baxter("whos-template", "this is {{ who }}'s template");
 >> undefined
 ```
 
-Use a named template:
+### Use a pre-registered template
 
 ```javascript
-baxter("template-id", {
+baxter("whos-template", {
 	who: "joe"
 });
 >> "this is joe's template"
 ```
 
-Use a one-off template with an array. Baxter.js know's this is a one-off because no template named `<li>{{ value }}</li>` has been registered yet and no html element exists with that id. However, after this has run Baxter.js will cache the parsed template, using the cached object each subsequent time you call baxter with the same template string.
+### Use an html tag template
+
+```html
+<script id="my-template" type="text/baxter">
+<ul>
+	<li>{{ one }}</li>
+	<li>{{ two }}</li>
+	<li>{{ three }}</li>
+</ul>
+</script>
+```
+
+```javascript
+baxter("list-template", {
+	one: 1,
+	two: 2,
+	three: 3
+});
+>> "\n<ul>\n\t<li>{{ one }}</li>\n\t<li>{{ two }}</li>\n\t<li>{{ three }}</li>\n</ul>\n"
+```
+
+### Use an unnamed template with an array
+
+Baxter.js know's this is an unnamed template because no template named `<li>{{ value }}</li>` has been registered yet and no html element exists with that id. However, after this has run Baxter.js will cache the parsed template, using the cached object each subsequent time you call baxter with the same template string.
 
 ```javascript
 baxter("<li>{{ value }}</li>", [
