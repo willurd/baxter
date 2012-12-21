@@ -33,13 +33,64 @@ function bind (context, fn) {
 function trim (string) {
 	return string.replace(/^\s+|\s+$/g, "");
 }
+
+/**
+ * TODO: This function is pretty gross.
+ */
+function toString (object /*, properties */) {
+	var properties = toArray(arguments, 1);
+	var parts = ["[", object.constructor.className];
+	var propertyStrings = [];
+	var property, value;
+	
+	if (properties.length > 0) {
+		for (var i = 0; i < properties.length; i++) {
+			property = properties[i];
+			
+			if (property instanceof Array) {
+				value = property[1](object);
+				property = property[0];
+			} else {
+				if (typeof object[property] === "string") {
+					value = "'" + object[property].replace(/'/g, "\\'") + "'";
+				} else {
+					value = object[property];
+				}
+			}
+			
+			if (typeof value === "function") {
+				value = value.apply(object);
+			}
+			
+			propertyStrings.push(property + ": " + value);
+		}
+		
+		parts.push(" ");
+		parts.push(propertyStrings.join(", "));
+	}
+	
+	parts.push("]");
+	
+	return parts.join("");
+}
+
 function EOFError (message) {
 	this.message = message;
 	this.name = "EOFError";
 }
 
+// Class properties.
+extend(EOFError, {
+	className: "EOFError"
+});
+
+// Instance properties.
 EOFError.prototype = extend(new Error(), {
+	constructor: EOFError,
 	
+	toString: function () {
+		return toString(this, "message");
+	}
 });
 
 function ParseError (message) {
@@ -47,8 +98,18 @@ function ParseError (message) {
 	this.name = "ParseError";
 }
 
+// Class properties.
+extend(ParseError, {
+	className: "ParseError"
+});
+
+// Instance properties.
 ParseError.prototype = extend(new Error(), {
+	constructor: ParseError,
 	
+	toString: function () {
+		return toString(this, "message");
+	}
 });
 
 function Environment (context) {
@@ -57,11 +118,17 @@ function Environment (context) {
 
 // Class properties.
 extend(Environment, {
-	
+	className: "Environment"
 });
 
 // Instance properties.
 extend(Environment.prototype, {
+	constructor: Environment,
+	
+	toString: function () {
+		return toString(this);
+	},
+	
 	/**
 	 * TODO: This is too simplistic and doesn't take dot paths or function
 	 *       calls into consideration.
@@ -94,17 +161,25 @@ function Buffer (string) {
 	
 	this.string = string;
 	this.position = -1;
+	this.line = 0;
+	this.column = 0;
 }
 
 // Class properties.
 extend(Buffer, {
-	
+	className: "Buffer"
 });
 
 // Instance properties.
 extend(Buffer.prototype, {
+	constructor: Buffer,
+	
+	toString: function () {
+		return toString(this, "position", "line", "column");
+	},
+	
 	eof: function () {
-		return this.position > this.string.length;
+		return this.position >= (this.string.length - 1);
 	},
 	
 	peek: function (offset) {
@@ -116,9 +191,10 @@ extend(Buffer.prototype, {
 	},
 	
 	next: function (offset) {
-		var value;
+		var value, chr;
 		
 		offset = offset || 1;
+		
 		value = [];
 		
 		while (offset > 0) {
@@ -127,8 +203,17 @@ extend(Buffer.prototype, {
 			}
 			
 			this.position++;
-			value.push(this.string[this.position]);
+			chr = this.string[this.position];
+			value.push(chr);
 			offset--;
+			
+			// Update the line/column for debugging.
+			if (chr == "\n" || chr == "\r") {
+				this.line++;
+				this.column = 0;
+			} else {
+				this.column++;
+			}
 		}
 		
 		return value.join("");
@@ -141,19 +226,33 @@ function AST () {
 
 // Class properties.
 extend(AST, {
-	
+	className: "AST"
 });
 
 // Instance properties.
 extend(AST.prototype, {
+	constructor: AST,
+	
+	toString: function () {
+		return toString(this, "length");
+	},
+	
 	evaluate: function (env) {
 		return this.tree.map(function (node) {
 			return node.evaluate(env);
 		}).join("");
 	},
 	
+	length: function () {
+		return this.tree.length;
+	},
+	
 	add: function (node) {
 		this.tree.push(node);
+	},
+	
+	get: function (index) {
+		return this.tree[index];
 	}
 });
 
@@ -163,43 +262,65 @@ AST.Node = function () {
 
 // Class properties.
 extend(AST.Node, {
-	
+	className: "AST.Node"
 });
 
 // Instance properties.
 extend(AST.Node.prototype, {
+	constructor: AST.Node,
+	
+	toString: function () {
+		return toString(this);
+	},
+	
 	evaluate: function (env) {
 		return undefined;
 	}
 });
 
-AST.String = function (string) {
-	this.string = string;
+AST.String = function (value, line, column) {
+	this.value = value;
+	this.line = line;
+	this.column = column;
 };
 
 // Class properties.
 extend(AST.String, {
-	
+	className: "AST.String"
 });
 
 // Instance properties.
 AST.String.prototype = extend(new AST.Node(), {
+	constructor: AST.String,
+	
+	toString: function () {
+		return toString(this, "value", "line", "column");
+	},
+	
 	evaluate: function (env) {
-		return this.string;
+		return this.value;
 	}
 });
 
-AST.Variable = function (name) {
+AST.Variable = function (name, line, column) {
 	this.name = name;
+	this.line = line;
+	this.column = column;
 };
 
 // Class properties.
 extend(AST.Variable, {
-	
+	className: "AST.Variable"
 });
 
 // Instance properties.
 AST.Variable.prototype = extend(new AST.Node(), {
+	constructor: AST.Variable,
+	
+	toString: function () {
+		return toString(this, "name", "line", "column");
+	},
+	
 	evaluate: function (env) {
 		return env.resolve(this.name);
 	}
@@ -211,6 +332,8 @@ function Parser () {
 
 // Class properties.
 extend(Parser, {
+	className: "Parser",
+	
 	instance: new Parser(),
 	
 	parse: function (string) {
@@ -220,6 +343,12 @@ extend(Parser, {
 
 // Instance properties.
 extend(Parser.prototype, {
+	constructor: Parser,
+	
+	toString: function () {
+		return toString(this);
+	},
+	
 	parse: function (string) {
 		var buffer = new Buffer(string);
 		var ast = new AST();
@@ -242,9 +371,10 @@ extend(Parser.prototype, {
 			if (next == "{") {
 				this.parseVariable(buffer, ast);
 			} else if (next == "%") {
-				this.parseDirective(buffer, ast);
+				this.parseStatement(buffer, ast);
 			} else {
-				throw new ParseError("Unknown directive syntax: '" + (chr + next) + "'");
+				throw new ParseError("Unknown statement syntax: '" + (chr + next) +
+					"' (line " + buffer.line + ", column " + buffer.column);
 			}
 		} else {
 			this.parseString(buffer, ast);
@@ -252,9 +382,10 @@ extend(Parser.prototype, {
 	},
 	
 	/**
-	 * Strings are anything that's not a directive.
+	 * Strings are anything that's not a statement.
 	 */
 	parseString: function (buffer, ast) {
+		var line = buffer.line, column = buffer.column;
 		var chars = [];
 		var chr;
 		
@@ -274,13 +405,13 @@ extend(Parser.prototype, {
 			}
 		}
 		
-		ast.add(new AST.String(chars.join("")));
+		ast.add(new AST.String(chars.join(""), line, column));
 	},
 	
 	/**
-	 * A directive is a sequence that starts with '{%' and ends with '%}'.
+	 * A statement is a sequence that starts with '{%' and ends with '%}'.
 	 */
-	parseDirective: function (buffer, ast) {
+	parseStatement: function (buffer, ast) {
 		var chr;
 		
 		buffer.next(2); // {%
@@ -296,6 +427,7 @@ extend(Parser.prototype, {
 	 * A variable is a sequence that starts with '{{' and ends with '}}'.
 	 */
 	parseVariable: function (buffer, ast) {
+		var line = buffer.line, column = buffer.column;
 		var chr;
 		var name = [];
 		
@@ -308,7 +440,7 @@ extend(Parser.prototype, {
 		
 		buffer.next(2); // }}
 		
-		ast.add(new AST.Variable(trim(name.join(""))));
+		ast.add(new AST.Variable(trim(name.join("")), line, column));
 	}
 });
 
@@ -320,11 +452,17 @@ function Template (id, content) {
 
 // Class properties.
 extend(Template, {
-	
+	className: "Template"
 });
 
 // Instance properties.
 extend(Template.prototype, {
+	constructor: Template,
+	
+	toString: function () {
+		return toString(this, "id", "ast");
+	},
+	
 	evaluate: function (context) {
 		return this.ast.evaluate(context);
 	}
@@ -336,11 +474,17 @@ function Baxter () {
 
 // Class properties.
 extend(Baxter, {
-	
+	className: "Baxter"
 });
 
 // Instance properties.
 extend(Baxter.prototype, {
+	constructor: Baxter,
+	
+	toString: function () {
+		return toString(this);
+	},
+	
 	clear: function () {
 		this.cache = {};
 	},

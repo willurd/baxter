@@ -4,11 +4,17 @@ function Environment (context) {
 
 // Class properties.
 extend(Environment, {
-	
+	className: "Environment"
 });
 
 // Instance properties.
 extend(Environment.prototype, {
+	constructor: Environment,
+	
+	toString: function () {
+		return toString(this);
+	},
+	
 	/**
 	 * TODO: This is too simplistic and doesn't take dot paths or function
 	 *       calls into consideration.

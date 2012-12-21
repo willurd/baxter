@@ -143,3 +143,19 @@ unittest.testCase("trim", {
 		this.assertEqual(trim("\n\n\n\n\n\ntest\n\n\n\n\n\n\n"), "test");
 	}
 });
+
+unittest.testCase("toString", {
+	testExists: function () {
+		this.assertFunction(toString);
+	},
+	
+	testFunctionProperties: function () {
+		var ast = new AST();
+		
+		ast.add(new AST.String());
+		ast.add(new AST.String());
+		ast.add(new AST.String());
+		
+		this.assertEqual(ast.toString(), "[AST length: 3]");
+	}
+});

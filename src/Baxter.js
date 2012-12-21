@@ -4,11 +4,17 @@ function Baxter () {
 
 // Class properties.
 extend(Baxter, {
-	
+	className: "Baxter"
 });
 
 // Instance properties.
 extend(Baxter.prototype, {
+	constructor: Baxter,
+	
+	toString: function () {
+		return toString(this);
+	},
+	
 	clear: function () {
 		this.cache = {};
 	},

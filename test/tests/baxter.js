@@ -42,6 +42,16 @@ unittest.testCase("Baxter.js Smoke Test", {
 		]);
 		
 		this.assertEqual(text, "<li>one</li>\n<li>two</li>\n<li>three</li>");
+	},
+	
+	testMultilineTemplate: function () {
+		var template = '<div class="person">\n' +
+			'	<h5>{{ name }}</h5>\n' +
+			'	<p>{{ name }} is {{ age }} years old.</p>\n' +
+			'</div>';
+		var text = baxter(template, { name: "John", age: 101 });
+		
+		this.assertEqual(text, '<div class="person">\n\t<h5>John</h5>\n\t<p>John is 101 years old.</p>\n</div>');
 	}
 });
 

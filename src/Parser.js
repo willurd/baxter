@@ -4,6 +4,8 @@ function Parser () {
 
 // Class properties.
 extend(Parser, {
+	className: "Parser",
+	
 	instance: new Parser(),
 	
 	parse: function (string) {
@@ -13,6 +15,12 @@ extend(Parser, {
 
 // Instance properties.
 extend(Parser.prototype, {
+	constructor: Parser,
+	
+	toString: function () {
+		return toString(this);
+	},
+	
 	parse: function (string) {
 		var buffer = new Buffer(string);
 		var ast = new AST();
@@ -35,9 +43,10 @@ extend(Parser.prototype, {
 			if (next == "{") {
 				this.parseVariable(buffer, ast);
 			} else if (next == "%") {
-				this.parseDirective(buffer, ast);
+				this.parseStatement(buffer, ast);
 			} else {
-				throw new ParseError("Unknown directive syntax: '" + (chr + next) + "'");
+				throw new ParseError("Unknown statement syntax: '" + (chr + next) +
+					"' (line " + buffer.line + ", column " + buffer.column);
 			}
 		} else {
 			this.parseString(buffer, ast);
@@ -45,9 +54,10 @@ extend(Parser.prototype, {
 	},
 	
 	/**
-	 * Strings are anything that's not a directive.
+	 * Strings are anything that's not a statement.
 	 */
 	parseString: function (buffer, ast) {
+		var line = buffer.line, column = buffer.column;
 		var chars = [];
 		var chr;
 		
@@ -67,13 +77,13 @@ extend(Parser.prototype, {
 			}
 		}
 		
-		ast.add(new AST.String(chars.join("")));
+		ast.add(new AST.String(chars.join(""), line, column));
 	},
 	
 	/**
-	 * A directive is a sequence that starts with '{%' and ends with '%}'.
+	 * A statement is a sequence that starts with '{%' and ends with '%}'.
 	 */
-	parseDirective: function (buffer, ast) {
+	parseStatement: function (buffer, ast) {
 		var chr;
 		
 		buffer.next(2); // {%
@@ -89,6 +99,7 @@ extend(Parser.prototype, {
 	 * A variable is a sequence that starts with '{{' and ends with '}}'.
 	 */
 	parseVariable: function (buffer, ast) {
+		var line = buffer.line, column = buffer.column;
 		var chr;
 		var name = [];
 		
@@ -101,6 +112,6 @@ extend(Parser.prototype, {
 		
 		buffer.next(2); // }}
 		
-		ast.add(new AST.Variable(trim(name.join(""))));
+		ast.add(new AST.Variable(trim(name.join("")), line, column));
 	}
 });
