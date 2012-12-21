@@ -32,6 +32,16 @@ unittest.testCase("Baxter.js Smoke Test", {
 		var text = baxter(template, context);
 		
 		this.assertEqual(text, "My name is Bob");
+	},
+	
+	testArrayContext: function () {
+		var text = baxter("<li>{{ value }}</li>", [
+			{ value: "one" },
+			{ value: "two" },
+			{ value: "three" }
+		]);
+		
+		this.assertEqual(text, "<li>one</li>\n<li>two</li>\n<li>three</li>");
 	}
 });
 
