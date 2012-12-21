@@ -41,7 +41,13 @@ baxter("list-template", {
 	two: 2,
 	three: 3
 });
->> "\n<ul>\n\t<li>1</li>\n\t<li>2</li>\n\t<li>3</li>\n</ul>\n"
+>> "
+<ul>
+	<li>1</li>
+	<li>2</li>
+	<li>3</li>
+</ul>
+"
 ```
 
 ### Use an unnamed template with an array
@@ -57,7 +63,9 @@ baxter("<li>{{ value }}</li>", [
 	{ value: "two" },
 	{ value: "three" }
 ]);
->> "<li>one</li>\n<li>two</li>\n<li>three</li>"
+>> "<li>one</li>
+<li>two</li>
+<li>three</li>"
 ```
 
 
