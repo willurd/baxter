@@ -392,16 +392,11 @@ extend(Baxter.prototype, {
 	 */
 	evaluate: function (template, context) {
 		var tpl = this.get(template);
-		var text;
 		
 		if (context instanceof Array) {
-			text = [];
-			
-			for (var i = 0, len = context.length; i < len; i++) {
-				text.push(tpl.evaluate(new Environment(context[i])));
-			}
-			
-			return text.join("\n");
+			return context.map(function (contextItem) {
+				return tpl.evaluate(new Environment(contextItem));
+			}).join("\n");
 		} else {
 			return tpl.evaluate(new Environment(context));
 		}
