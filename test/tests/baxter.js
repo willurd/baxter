@@ -161,7 +161,7 @@ unittest.testCase("String Interpolation", {
 	},
 	
 	testVariableInMethodCall: function () {
-		var template = "The name of the number {{ number }} is {{ numberName({{ number }}) }}";
+		var template = "The name of the number {{ number }} is {{ numberName(number) }}";
 		this.todo("Write me");
 	}
 });
