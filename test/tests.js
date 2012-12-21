@@ -1,12 +1,27 @@
 unittest.testCase("Baxter.js Smoke Test", {
-	testBaxterIsAFunction: function () {
+	testExists: function () {
 		this.assertFunction(baxter);
+	},
+	
+	testNoContext: function () {
+		this.assertEqual(baxter("test"), "test");
 	},
 	
 	testBasicString: function () {
 		var string = "This is a test";
 		
 		this.assertEqual(baxter(string), string);
+	},
+	
+	testEscapedCharacters: function () {
+		this.assertEqual(baxter("\\n"), "n");
+		this.assertEqual(baxter("\\"), "");
+		this.assertEqual(baxter("\\\\"), "\\");
+		this.assertEqual(baxter("\\\\\\\\"), "\\\\");
+	},
+	
+	testEscapedVariable: function () {
+		this.assertEqual(baxter("\\{\\{ test }}"), "{{ test }}");
 	},
 	
 	testUnnamedTemplate: function () {
@@ -25,13 +40,105 @@ unittest.testCase("String Interpolation", {
 		var text = baxter(template, context);
 		
 		this.assertEqual(text, "This is an awesome string");
+	},
+	
+	testMissingValue: function () {
+		var template = "This is a {{ adjective }} test of something";
+		var text = baxter(template, {});
+		
+		this.assertEqual(text, "This is a  test of something");
+	},
+	
+	testNestedValue: function () {
+		var text = baxter("Your name: {{ user.name }}", { user: { name: "Bob" }});
+		
+		this.assertEqual(text, "Your name: Bob");
 	}
 	
-	// testMissingContext
-	// testNestedContext
 	// testMethodCallWithNoArguments
 	// testMethodCallWithArguments
 });
+
+// ======================================================================
+// Core
+// ======================================================================
+
+unittest.section("Core");
+
+unittest.testCase("Environment", {
+	testExists: function () {
+		this.assertFunction(Environment);
+	},
+	
+	testBasicValue: function () {
+		var env = new Environment({ test: "value" });
+		
+		this.assertEqual(env.get("test"), "value");
+	},
+	
+	testObjectIdentity: function () {
+		var obj = {a: 1, b: 2};
+		var env = new Environment({ obj: obj });
+		
+		this.assertEqual(env.get("obj"), obj);
+	},
+	
+	testDotNotation: function () {
+		var env = new Environment({ a: { b: { c: 123 } } });
+		
+		this.assertEqual(env.get("a.b.c"), 123);
+	}
+});
+
+unittest.testCase("Buffer", {
+	testExists: function () {
+		this.assertFunction(Buffer);
+	}
+});
+
+unittest.testCase("Parser", {
+	testExists: function () {
+		this.assertFunction(Parser);
+	}
+});
+
+unittest.testCase("Template", {
+	testExists: function () {
+		this.assertFunction(Template);
+	}
+});
+
+// ======================================================================
+// Errors
+// ======================================================================
+
+unittest.section("Errors");
+
+unittest.testCase("EOFError", {
+	testExists: function () {
+		this.assertFunction(EOFError);
+	},
+	
+	testIsError: function () {
+		this.assertInstanceOf(new EOFError(), Error);
+	}
+});
+
+unittest.testCase("ParseError", {
+	testExists: function () {
+		this.assertFunction(ParseError);
+	},
+	
+	testIsError: function () {
+		this.assertInstanceOf(new ParseError(), Error);
+	}
+});
+
+// ======================================================================
+// Abstract Syntax Tree
+// ======================================================================
+
+unittest.section("Abstract Syntax Tree");
 
 unittest.testCase("AST", {
 	testExists: function () {
@@ -63,6 +170,12 @@ unittest.testCase("AST.String", {
 		var node = new AST.String(string);
 		
 		this.assertEqual(node.evaluate(env), string);
+	}
+});
+
+unittest.testCase("AST.Variable", {
+	testExists: function () {
+		this.assertFunction(AST.Variable);
 	}
 });
 

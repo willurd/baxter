@@ -62,7 +62,7 @@ extend(Environment, {
 
 // Instance properties.
 extend(Environment.prototype, {
-	evaluate: function (name) {
+	get: function (name) {
 		// TODO: This evaluation is too simplistic and doesn't take dot paths
 		//       or function calls into consideration.
 		return this.context[name];
@@ -183,7 +183,7 @@ extend(AST.Variable, {
 // Instance properties.
 AST.Variable.prototype = extend(new AST.Node(), {
 	evaluate: function (env) {
-		return env.evaluate(this.name);
+		return env.get(this.name);
 	}
 });
 
@@ -226,7 +226,7 @@ extend(Parser.prototype, {
 			} else if (next == "%") {
 				this.parseDirective(buffer, ast);
 			} else {
-				throw new ParseError("Unknown directive syntax: " + (chr + next));
+				throw new ParseError("Unknown directive syntax: '" + (chr + next) + "'");
 			}
 		} else {
 			this.parseString(buffer, ast);

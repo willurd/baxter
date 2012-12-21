@@ -37,7 +37,7 @@ extend(Parser.prototype, {
 			} else if (next == "%") {
 				this.parseDirective(buffer, ast);
 			} else {
-				throw new ParseError("Unknown directive syntax: " + (chr + next));
+				throw new ParseError("Unknown directive syntax: '" + (chr + next) + "'");
 			}
 		} else {
 			this.parseString(buffer, ast);

@@ -10,6 +10,6 @@ extend(AST.Variable, {
 // Instance properties.
 AST.Variable.prototype = extend(new AST.Node(), {
 	evaluate: function (env) {
-		return env.evaluate(this.name);
+		return env.get(this.name);
 	}
 });
