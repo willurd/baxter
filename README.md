@@ -43,7 +43,7 @@ baxter("list-template", {
 
 ### Use an unnamed template with an array
 
-Baxter.js know's this is an unnamed template because no template named `<li>{{ value }}</li>` has been registered yet and no html element exists with that id. However, after this has run Baxter.js will cache the parsed template, using the cached object each subsequent time you call baxter with the same template string.
+Baxter.js know's this is an unnamed template because no template named `<li>{{ value }}</li>` has been registered yet and no html element exists with that id. However, after this has run Baxter.js will cache the parsed template, using the cached object each subsequent time you call Baxter.js with the same template string.
 
 ```javascript
 baxter("<li>{{ value }}</li>", [
