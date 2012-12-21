@@ -72,8 +72,12 @@ extend(Environment.prototype, {
 		var parts = name.split(".");
 		var value = this.context;
 		
-		for (var i = 0; i < parts.length; i++) {
-			value = value[parts[i]];
+		try {
+			for (var i = 0; i < parts.length; i++) {
+				value = value[parts[i]];
+			}
+		} catch (e) {
+			// Error getting value.
 		}
 		
 		return value;
