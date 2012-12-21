@@ -1,5 +1,8 @@
 # Baxter.js: TODO
 
-* Add basic 'string interpolation': "this is {{ article }} {{ adjective }} string".
+* Method calling.
+* Method calling with arguments.
+* Method calling with template arguments.
+* Test error states.
 * Read: https://docs.djangoproject.com/en/dev/topics/templates/.
-* Parse line/column numbers and better error reporting.
+* Parser line/column numbers and better error reporting.

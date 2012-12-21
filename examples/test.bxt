@@ -1,9 +1,15 @@
 {% extend "base-template" %}
 
-{% section main %}
+{% block title %}This is my title{% end %}
+
+{% block main %}
 	<ul class="{{ class }}">
 	{% for item in items %}
-		<li><a href="{{ item.url }}#{{ item.title | slugify }}">{{ item.fullName() }}</a></li>
+		<li>
+			<a href="{{ item.url }}#{{ item.title | slugify }}">{{ item.fullName() }}</a>
+			-
+			{{ item.text | truncate-words 30 "..." | lowercase }}
+		</li>
 	{% end %}
 	</ul>
 {% end %}
