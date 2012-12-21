@@ -31,7 +31,7 @@ extend(Environment.prototype, {
 			}
 		} catch (e) {
 			// Error getting value.
-			if (global.baxter.debug) {
+			if (ns.baxter.debug) {
 				throw e;
 			}
 		}

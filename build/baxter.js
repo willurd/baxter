@@ -1,12 +1,12 @@
 /**
  * TODO: Copyright goes here.
  */
-(function (global, undefined) {
+(function (ns, undefined) {
 	"use strict";
 	
 	var baxter;
 	var alias = "tt";
-	var previousAtAlias = global[alias];
+	var previousAtAlias = ns[alias];
 
 function toArray (object, start) {
 	return Array.prototype.slice.call(object, start || 0);
@@ -147,7 +147,7 @@ extend(Environment.prototype, {
 			}
 		} catch (e) {
 			// Error getting value.
-			if (global.baxter.debug) {
+			if (ns.baxter.debug) {
 				throw e;
 			}
 		}
@@ -578,10 +578,10 @@ extend(Baxter.prototype, {
 	baxter.template.debug = false;
 	
 	baxter.template.noConflict = function () {
-		global[alias] = previousAtAlias;
-		return global.baxter;
+		ns[alias] = previousAtAlias;
+		return ns.baxter;
 	};
 	
-	global.baxter = baxter.template;
-	global[alias] = global.baxter;
+	ns.baxter = baxter.template;
+	ns[alias] = ns.baxter;
 })(this);

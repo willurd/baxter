@@ -1,9 +1,9 @@
 /**
  * TODO: Copyright goes here.
  */
-(function (global, undefined) {
+(function (ns, undefined) {
 	"use strict";
 	
 	var baxter;
 	var alias = "tt";
-	var previousAtAlias = global[alias];
+	var previousAtAlias = ns[alias];
