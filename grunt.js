@@ -50,6 +50,12 @@ module.exports = function (grunt) {
 				dest: "<config:files.build>"
 			}
 		},
+		min: {
+			dist: {
+				src: ["<config:files.build>"],
+				dest: "<config:files.buildmin>"
+			}
+		},
 		watch: {
 			src: {
 				files: [
@@ -67,5 +73,5 @@ module.exports = function (grunt) {
 		}
 	});
 	
-	grunt.registerTask("default", "lint:before concat lint:after");
+	grunt.registerTask("default", "lint:before concat lint:after min");
 };
