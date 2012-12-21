@@ -43,9 +43,9 @@ module.exports = function (grunt) {
 		concat: {
 			dist: {
 				src: [
-					"src/_header.js",
+					"src/wrapper/_header.js",
 					"<config:files.src>",
-					"src/_footer.js"
+					"src/wrapper/_footer.js"
 				],
 				dest: "<config:files.build>"
 			}

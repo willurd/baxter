@@ -62,10 +62,21 @@ extend(Environment, {
 
 // Instance properties.
 extend(Environment.prototype, {
-	get: function (name) {
-		// TODO: This evaluation is too simplistic and doesn't take dot paths
-		//       or function calls into consideration.
-		return this.context[name];
+	/**
+	 * TODO: This is too simplistic and doesn't take dot paths or function
+	 *       calls into consideration.
+	 * TODO: This function parses the name each time. This could be bad for
+	 *       performance.
+	 */
+	resolve: function (name) {
+		var parts = name.split(".");
+		var value = this.context;
+		
+		for (var i = 0; i < parts.length; i++) {
+			value = value[parts[i]];
+		}
+		
+		return value;
 	}
 });
 
@@ -183,7 +194,7 @@ extend(AST.Variable, {
 // Instance properties.
 AST.Variable.prototype = extend(new AST.Node(), {
 	evaluate: function (env) {
-		return env.get(this.name);
+		return env.resolve(this.name);
 	}
 });
 

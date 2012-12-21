@@ -8,20 +8,20 @@ unittest.testCase("Environment", {
 	testBasicValue: function () {
 		var env = new Environment({ test: "value" });
 		
-		this.assertEqual(env.get("test"), "value");
+		this.assertEqual(env.resolve("test"), "value");
 	},
 	
 	testObjectIdentity: function () {
 		var obj = {a: 1, b: 2};
 		var env = new Environment({ obj: obj });
 		
-		this.assertEqual(env.get("obj"), obj);
+		this.assertEqual(env.resolve("obj"), obj);
 	},
 	
 	testDotNotation: function () {
 		var env = new Environment({ a: { b: { c: 123 } } });
 		
-		this.assertEqual(env.get("a.b.c"), 123);
+		this.assertEqual(env.resolve("a.b.c"), 123);
 	}
 });
 
