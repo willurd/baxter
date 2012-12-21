@@ -38,7 +38,7 @@ baxter("list-template", {
 	two: 2,
 	three: 3
 });
->> "\n<ul>\n\t<li>{{ one }}</li>\n\t<li>{{ two }}</li>\n\t<li>{{ three }}</li>\n</ul>\n"
+>> "\n<ul>\n\t<li>1</li>\n\t<li>2</li>\n\t<li>3</li>\n</ul>\n"
 ```
 
 ### Use an unnamed template with an array
