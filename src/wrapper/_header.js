@@ -5,3 +5,5 @@
 	"use strict";
 	
 	var baxter;
+	var alias = "tt";
+	var previousAtAlias = global[alias];

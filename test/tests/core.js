@@ -15,7 +15,7 @@ unittest.testCase("Environment", {
 		var obj = {a: 1, b: 2};
 		var env = new Environment({ obj: obj });
 		
-		this.assertEqual(env.resolve("obj"), obj);
+		this.assertTrue(env.resolve("obj") === obj);
 	},
 	
 	testDotNotation: function () {

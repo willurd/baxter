@@ -44,7 +44,7 @@ unittest.testCase("extend", {
 	testIdentity: function () {
 		var obj = { one: "two" };
 		
-		this.assertEqual(extend(obj), obj);
+		this.assertTrue(extend(obj) === obj);
 	},
 	
 	testExtendTarget: function () {

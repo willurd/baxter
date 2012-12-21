@@ -5,6 +5,8 @@
 	"use strict";
 	
 	var baxter;
+	var alias = "tt";
+	var previousAtAlias = global[alias];
 
 function toArray (object, start) {
 	return Array.prototype.slice.call(object, start || 0);
@@ -574,5 +576,11 @@ extend(Baxter.prototype, {
 	baxter = new Baxter();
 	baxter.template = bind(baxter, baxter.template);
 	baxter.template.debug = false;
+	
+	baxter.template.noConflict = function () {
+		global[alias] = previousAtAlias;
+	};
+	
 	global.baxter = baxter.template;
+	global[alias] = global.baxter;
 })(this);

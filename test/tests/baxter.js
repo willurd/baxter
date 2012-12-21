@@ -5,6 +5,13 @@ unittest.testCase("Baxter.js Smoke Test", {
 		this.assertFunction(baxter);
 	},
 	
+	testAlias: function () {
+		this.assertEqual(tt, baxter);
+		
+		baxter.noConflict();
+		this.assertEqual(tt, "alias test");
+	},
+	
 	testNoContext: function () {
 		this.assertEqual(baxter("test"), "test");
 	},
@@ -127,24 +134,30 @@ unittest.testCase("String Interpolation", {
 	
 	testMethodCall: function () {
 		var template = "Your name is: {{ user.fullName() }}";
-		this.todo("Write me");
+		var text = baxter(template, { user: { fullName: function () { return "John Doe"; } } });
+		
+		this.assertEqual(text, "Your name is: John Doe");
 	},
 	
 	testMissingMethodCall: function () {
 		var template = "This method doesn't exist: {{ user.whereAmI() }}";
-		this.todo("Write me");
+		var text = baxter(template, { user: {} });
+		
+		this.assertEqual(text, "This method doesn't exist: ");
 	},
 	
 	testMethodCallWithArguments: function () {
-		var template = "The square root of 2 is {{ sqrt(2) }}";
-		this.todo("Write me");
+		var template = "The square root of 4 is {{ sqrt(4) }}";
+		var text = baxter(template, Math);
+		
+		this.assertEqual(text, "The square root of 4 is 2");
 	},
 	
 	testChainedMethodCalls: function () {
 		var context = {
-			getUserManager: function () {
+			users: function () {
 				return {
-					getUser: function (firstName, lastName) {
+					user: function (firstName, lastName) {
 						return {
 							fullName: function () {
 								return firstName + " " + lastName;
@@ -154,7 +167,7 @@ unittest.testCase("String Interpolation", {
 				};
 			}
 		};
-		var template = "User name: {{ getUserManager().getUser('John', 'Doe').getFullName() }}";
+		var template = "User name: {{ users().user('John', 'Doe').fullName() }}";
 		var text = baxter(template, context);
 		
 		this.assertEqual(text, "User name: John Doe");
@@ -162,6 +175,14 @@ unittest.testCase("String Interpolation", {
 	
 	testVariableInMethodCall: function () {
 		var template = "The name of the number {{ number }} is {{ numberName(number) }}";
-		this.todo("Write me");
+		var text = baxter(template, { number: 2, numberName: function (num) {
+			return ({
+				1: "one",
+				2: "two",
+				3: "three"
+			})[num];
+		}});
+		
+		this.assertEqual(text, "The name of the number 2 is two");
 	}
 });
