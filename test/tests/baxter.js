@@ -34,6 +34,23 @@ unittest.testCase("Baxter.js Smoke Test", {
 		this.assertEqual(text, "My name is Bob");
 	},
 	
+	testRegisteredTemplate: function () {
+		var name = "my-template";
+		var template = "This is a {{ what }}";
+		var text;
+		
+		baxter(name, template);
+		text = baxter(name, { what: "registered template" });
+		
+		this.assertEqual(text, "This is a registered template");
+	},
+	
+	testHtmlTagTemplate: function () {
+		var text = baxter("anchor-template", { url: "http://google.com", text: "Google" });
+		
+		this.assertEqual(text, '<a href="http://google.com">Google</a>');
+	},
+	
 	testArrayContext: function () {
 		var text = baxter("<li>{{ value }}</li>", [
 			{ value: "one" },

@@ -552,8 +552,19 @@ extend(Baxter.prototype, {
 	 * @param template {string} The template ID or contents.
 	 */
 	get: function (template) {
+		var el;
+		
 		if (!(template in this.cache)) {
-			this.register(template, template);
+			el = document.getElementById(template);
+			
+			if (el !== null) {
+				// This template is in an html element.
+				this.register(template, el.innerHTML);
+			} else {
+				// This is an unnamed template, register it with itself as its name
+				// so we don't have to parse it twice.
+				this.register(template, template);
+			}
 		}
 		
 		return this.cache[template];
