@@ -201,7 +201,7 @@ extend(Buffer.prototype, {
 		
 		while (offset > 0) {
 			if (this.eof()) {
-				throw new EOFError();
+				throw new EOFError("End of buffer at line " + this.line + ", column " + this.column);
 			}
 			
 			this.position++;
@@ -579,6 +579,7 @@ extend(Baxter.prototype, {
 	
 	baxter.template.noConflict = function () {
 		global[alias] = previousAtAlias;
+		return global.baxter;
 	};
 	
 	global.baxter = baxter.template;

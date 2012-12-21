@@ -8,8 +8,9 @@ unittest.testCase("Baxter.js Smoke Test", {
 	testAlias: function () {
 		this.assertEqual(tt, baxter);
 		
-		baxter.noConflict();
+		var newAlias = baxter.noConflict();
 		this.assertEqual(tt, "alias test");
+		this.assertEqual(newAlias, baxter);
 	},
 	
 	testNoContext: function () {
@@ -128,8 +129,15 @@ unittest.testCase("String Interpolation", {
 	},
 	
 	testMissingFunctionCall: function () {
+		baxter.debug = true;
+		
 		var template = "This function doesn't exist: {{ whereAmI() }}";
-		this.todo("Write me");
+		var text = baxter(template, {});
+		
+		this.assertEqual(text, "This function doesn't exist: ");
+		
+		baxter.debug = false;
+		this.fail("This test only passes by coincidence");
 	},
 	
 	testMethodCall: function () {
@@ -140,10 +148,15 @@ unittest.testCase("String Interpolation", {
 	},
 	
 	testMissingMethodCall: function () {
+		baxter.debug = true;
+		
 		var template = "This method doesn't exist: {{ user.whereAmI() }}";
 		var text = baxter(template, { user: {} });
 		
 		this.assertEqual(text, "This method doesn't exist: ");
+		
+		baxter.debug = false;
+		this.fail("This test only passes by coincidence");
 	},
 	
 	testMethodCallWithArguments: function () {

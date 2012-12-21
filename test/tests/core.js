@@ -28,11 +28,21 @@ unittest.testCase("Environment", {
 unittest.testCase("Buffer", {
 	testExists: function () {
 		this.assertFunction(Buffer);
+	},
+	
+	testEofError: function () {
+		var buffer = new Buffer("test");
+		
+		buffer.next(); // t
+		buffer.next(); // e
+		buffer.next(); // s
+		buffer.next(); // t
+		
+		this.assertRaises(EOFError, bind(buffer, buffer.next));
 	}
 	
 	// TEST:
 	//   peek, next
-	//   eof
 	//   line/column numbers
 });
 

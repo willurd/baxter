@@ -43,7 +43,7 @@ extend(Buffer.prototype, {
 		
 		while (offset > 0) {
 			if (this.eof()) {
-				throw new EOFError();
+				throw new EOFError("End of buffer at line " + this.line + ", column " + this.column);
 			}
 			
 			this.position++;

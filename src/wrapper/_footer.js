@@ -4,6 +4,7 @@
 	
 	baxter.template.noConflict = function () {
 		global[alias] = previousAtAlias;
+		return global.baxter;
 	};
 	
 	global.baxter = baxter.template;
