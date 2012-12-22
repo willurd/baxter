@@ -1,0 +1,16 @@
+var users = [
+	{ username: "john" },
+	{ username: "marie" }
+];
+
+"Following: {{ users.map(lambda u: u.username).join(', ') }}"  // Lambda syntax
+"Following: {{ users.map(:username).join(', ') }}"             // Keyboard getter shorthand
+"Following: {{ users[:username].join(', ') }}"                 // Array map shorthand
+"Following: {{ users[:username] | join ', ' }}"                // Array map shorthand with join filter
+"Following: {{ users[:username][', '] }}"                      // Array map and join shorthand
+
+So the idea is, an array indexed by:
+
+* a number returns the item at that index
+* a function maps that function over the array
+* a string joins the array by that string
