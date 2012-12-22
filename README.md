@@ -237,7 +237,7 @@ Some possibilities for a lambda syntax in Baxter.js include:
 
 ### Keyword (or symbol) syntax
 
-A keyword would be short-hand for a function that takes an object and returns the value of object["keyword"]. So, inside a template, `users.map(:name)` would become `users.map(function (user) { return user["name"]; })` (a-la Symbol#to_proc in Ruby). For example:
+A keyword would be short-hand for a function that takes an object and returns the value of object["keyword"]. So, inside a template, `users.map(:name)` would become `users.map(function (user) { return user["name"]; })` (a-la [Symbol#to_proc][1] in Ruby). For example:
 
 ```javascript
 baxter("Following: {{ users.map(:username).join(', ') }}", {
@@ -253,3 +253,4 @@ baxter("Following: {{ users.map(:username).join(', ') }}", {
 
 
 [0]: https://docs.djangoproject.com/en/dev/topics/templates/
+[1]: http://pragdave.pragprog.com/pragdave/2005/11/symbolto_proc.html
