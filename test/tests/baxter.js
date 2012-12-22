@@ -80,8 +80,8 @@ unittest.testCase("Baxter.js Smoke Test", {
 	}
 });
 
-unittest.testCase("String Interpolation", {
-	testBasicStringInterpolation: function () {
+unittest.testCase("Identifiers", {
+	testBasicIdentifiers: function () {
 		var template = "This is {{ article }} {{ adjective }} string";
 		var context = { article: "an", adjective: "awesome" };
 		var text = baxter(template, context);
@@ -96,24 +96,26 @@ unittest.testCase("String Interpolation", {
 		this.assertEqual(text, "This is a  test of something");
 	},
 	
-	testNestedValue: function () {
+	testIdentifierChain: function () {
 		var text = baxter("Your name: {{ user.name }}", { user: { name: "Bob" } });
 		
 		this.assertEqual(text, "Your name: Bob");
 	},
 	
-	testShallowMissingNestedValue: function () {
+	testShallowMissingIdentifier: function () {
 		var text = baxter("Your name: {{ user.name }}", { user: {} });
 		
 		this.assertEqual(text, "Your name: ");
 	},
 	
-	testDeepMissingNestedValue: function () {
+	testDeepMissingIdentifier: function () {
 		var text = baxter("Your name: {{ account.user.name }}", { account: {} });
 		
 		this.assertEqual(text, "Your name: ");
-	},
-	
+	}
+});
+
+unittest.testCase("Functions", {
 	testFunctionCall: function () {
 		var user = {
 			firstName: "John",
@@ -142,7 +144,13 @@ unittest.testCase("String Interpolation", {
 	
 	testMethodCall: function () {
 		var template = "Your name is: {{ user.fullName() }}";
-		var text = baxter(template, { user: { fullName: function () { return "John Doe"; } } });
+		var text = baxter(template, {
+			user: {
+				fullName: function () {
+					return "John Doe";
+				}
+			}
+		});
 		
 		this.assertEqual(text, "Your name is: John Doe");
 	},
@@ -159,9 +167,19 @@ unittest.testCase("String Interpolation", {
 		this.fail("This test only passes by coincidence");
 	},
 	
-	testMethodCallWithArguments: function () {
+	testMethodCallWithSingleArgument: function () {
 		var template = "The square root of 4 is {{ sqrt(4) }}";
 		var text = baxter(template, Math);
+		
+		this.assertEqual(text, "The square root of 4 is 2");
+	},
+	
+	testMethodCallWithIdentifierArgument: function () {
+		var template = "The square root of {{ number }} is {{ sqrt(number) }}";
+		var text = baxter(template, {
+			number: 4,
+			sqrt: Math
+		});
 		
 		this.assertEqual(text, "The square root of 4 is 2");
 	},

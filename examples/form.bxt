@@ -1,0 +1,9 @@
+{# Why not let baxter do the work for you? #}
+
+{% form "post", "/{{ model }}/{{ id }}", field-class: "form-field" %}
+	{% text "name", "Name", value: name, placeholder: "Enter your name" %}
+	{% number "age", "Age", value: age, min: 0, max: 100 %}
+	{% textarea "about", "About you", value: about %}
+	{% checkbox "signedUp", "Sign up for the newsletter", selected: signedUp %}
+	{% submit "Save changes" %}
+{% end %}
